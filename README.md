@@ -108,6 +108,12 @@ ros2 launch aloam_velodyne pointlio_scpgo.launch.py \
 - `save_directory` must be writable and end with `/` (laserPGO saves scans/odometry here).
 - `rviz:=true` opens the SC-PGO RViz config (shows `/aft_pgo_path`, `/aft_pgo_map`, `/aft_pgo_odom`, loop-closure scans).
 
+
+### Terminal 3 — data bag play
+```bash
+ros2 bag play xxxx.bag
+```
+
 ---
 
 ## Topic interface (Point-LIO → laserPGO)
