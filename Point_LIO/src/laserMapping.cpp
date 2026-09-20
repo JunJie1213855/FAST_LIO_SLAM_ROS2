@@ -7,6 +7,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
+#include <pcl/console/print.h>
 
 #include <nav_msgs/msg/odometry.hpp>
 #include <nav_msgs/msg/path.hpp>
@@ -297,6 +298,14 @@ void publish_odometry(
     const rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr &pubOdomAftMapped,
     std::shared_ptr<tf2_ros::TransformBroadcaster> &tf_br)
 {
+  // RCLCPP_INFO(rclcpp::get_logger("debug"),
+  //             "t=%.3f pos=[%.3f %.3f %.3f] vel=[%.3f %.3f %.3f] acc_avr=[%.3f %.3f %.3f] gyr=[%.3f %.3f %.3f]",
+  //             Measures.lidar_beg_time,
+  //             kf_output.x_.pos(0), kf_output.x_.pos(1), kf_output.x_.pos(2),
+  //             kf_output.x_.vel(0), kf_output.x_.vel(1), kf_output.x_.vel(2),
+  //             acc_avr(0), acc_avr(1), acc_avr(2),
+  //             angvel_avr(0), angvel_avr(1), angvel_avr(2));
+
   odomAftMapped.header.frame_id = "camera_init";
   odomAftMapped.child_frame_id = "body";
   if (publish_odometry_without_downsample)
@@ -345,6 +354,7 @@ void publish_path(const rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pubPat
 
 int main(int argc, char **argv)
 {
+  pcl::console::setVerbosityLevel(pcl::console::L_ERROR);
   rclcpp::init(argc, argv);
   auto nh = std::make_shared<rclcpp::Node>("laserMapping");
 
@@ -416,13 +426,13 @@ int main(int argc, char **argv)
   }
   else
   {
-    // sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
-    //   lid_topic, rclcpp::SensorDataQoS(),
-    //   [](const sensor_msgs::msg::PointCloud2::SharedPtr msg) { standard_pcl_cbk(msg); });
     sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
-        lid_topic, rclcpp::QoS(10).reliable(),
-        [](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
-        { standard_pcl_cbk(msg); });
+      lid_topic, rclcpp::SensorDataQoS(),
+      [](const sensor_msgs::msg::PointCloud2::SharedPtr msg) { standard_pcl_cbk(msg); });
+    // sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
+    //     lid_topic, rclcpp::QoS(1000).reliable(),
+    //     [](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+    //     { standard_pcl_cbk(msg); });
   }
   auto sub_imu =
       nh->create_subscription<sensor_msgs::msg::Imu>(imu_topic, rclcpp::SensorDataQoS(), imu_cbk);
@@ -448,6 +458,7 @@ int main(int argc, char **argv)
     executor.spin_some();
     if (sync_packages(Measures))
     {
+      // RCLCPP_INFO(LOGGER, "sync success!!!");
       if (flg_reset)
       {
         RCLCPP_WARN(LOGGER, "reset when rosbag play back");
@@ -547,9 +558,10 @@ int main(int argc, char **argv)
         feats_down_size = feats_down_body->points.size();
       }
 
+      // 查看 imu 有没有初始化
       if (!p_imu->after_imu_init_) // !p_imu->UseLIInit &&
       {
-        if (!p_imu->imu_need_init_)
+        if (!p_imu->imu_need_init_) // imu 初始化，重力对齐
         {
           V3D tmp_gravity;
           if (imu_en)
@@ -563,7 +575,7 @@ int main(int argc, char **argv)
           }
           // V3D tmp_gravity << VEC_FROM_ARRAY(gravity_init);
           M3D rot_init;
-          p_imu->Set_init(tmp_gravity, rot_init);
+          p_imu->Set_init(tmp_gravity, rot_init); // 设置初始化，重力对齐
           kf_input.x_.rot = rot_init;
           kf_output.x_.rot = rot_init;
           // kf_input.x_.rot; //.normalize();
