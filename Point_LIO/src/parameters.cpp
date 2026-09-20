@@ -42,18 +42,19 @@ std::vector<double> init_pose;
 
 double lidar_time_inte = 0.1, first_imu_time = 0.0;
 int cut_frame_num = 1, orig_odom_freq = 10;
-double online_refine_time = 20.0;  //unit: s
-bool cut_frame_init = false;       // true;
+double online_refine_time = 20.0; // unit: s
+bool cut_frame_init = false;      // true;
 
 MeasureGroup Measures;
 
 ofstream fout_out, fout_imu_pbp;
 
-void readParameters(std::shared_ptr<rclcpp::Node> & nh)
+void readParameters(std::shared_ptr<rclcpp::Node> &nh)
 {
   p_pre.reset(new Preprocess());
   p_imu.reset(new ImuProcess());
-  try {
+  try
+  {
     nh->declare_parameter<bool>("prop_at_freq_of_imu", true);
     nh->get_parameter("prop_at_freq_of_imu", prop_at_freq_of_imu);
 
@@ -197,7 +198,7 @@ void readParameters(std::shared_ptr<rclcpp::Node> & nh)
 
     nh->declare_parameter<bool>("odometry.publish_odometry_without_downsample", false);
     nh->get_parameter(
-      "odometry.publish_odometry_without_downsample", publish_odometry_without_downsample);
+        "odometry.publish_odometry_without_downsample", publish_odometry_without_downsample);
 
     nh->declare_parameter<bool>("publish.path_en", true);
     nh->get_parameter("publish.path_en", path_en);
@@ -234,37 +235,53 @@ void readParameters(std::shared_ptr<rclcpp::Node> & nh)
 
     nh->declare_parameter<int>("common.cut_frame_num", 3);
     nh->get_parameter("common.cut_frame_num", cut_frame_num);
-  } catch (const rclcpp::ParameterTypeException & e) {
+  }
+  catch (const rclcpp::ParameterTypeException &e)
+  {
     RCLCPP_ERROR(nh->get_logger(), "Parameter type exception: %s", e.what());
-  } catch (const std::exception & e) {
+  }
+  catch (const std::exception &e)
+  {
     RCLCPP_ERROR(nh->get_logger(), "Exception: %s", e.what());
   }
 
-  if (ivox_nearby_type == 0) {
+  if (ivox_nearby_type == 0)
+  {
     ivox_options_.nearby_type_ = IVoxType::NearbyType::CENTER;
-  } else if (ivox_nearby_type == 6) {
+  }
+  else if (ivox_nearby_type == 6)
+  {
     ivox_options_.nearby_type_ = IVoxType::NearbyType::NEARBY6;
-  } else if (ivox_nearby_type == 18) {
+  }
+  else if (ivox_nearby_type == 18)
+  {
     ivox_options_.nearby_type_ = IVoxType::NearbyType::NEARBY18;
-  } else if (ivox_nearby_type == 26) {
+  }
+  else if (ivox_nearby_type == 26)
+  {
     ivox_options_.nearby_type_ = IVoxType::NearbyType::NEARBY26;
-  } else {
+  }
+  else
+  {
     // LOG(WARNING) << "unknown ivox_nearby_type, use NEARBY18";
     ivox_options_.nearby_type_ = IVoxType::NearbyType::NEARBY18;
   }
   p_imu->gravity_ << VEC_FROM_ARRAY(gravity);
 }
 
-Eigen::Matrix<double, 3, 1> SO3ToEuler(const SO3 & rot)
+Eigen::Matrix<double, 3, 1> SO3ToEuler(const SO3 &rot)
 {
   double sy = sqrt(rot(0, 0) * rot(0, 0) + rot(1, 0) * rot(1, 0));
   bool singular = sy < 1e-6;
   double x, y, z;
-  if (!singular) {
+  if (!singular)
+  {
     x = atan2(rot(2, 1), rot(2, 2));
     y = atan2(-rot(2, 0), sy);
     z = atan2(rot(1, 0), rot(0, 0));
-  } else {
+  }
+  else
+  {
     x = atan2(-rot(1, 2), rot(1, 1));
     y = atan2(-rot(2, 0), sy);
     z = 0;
@@ -278,19 +295,19 @@ void open_file()
   fout_out.open(DEBUG_FILE_DIR("mat_out.txt"), ios::out);
   fout_imu_pbp.open(DEBUG_FILE_DIR("imu_pbp.txt"), ios::out);
   if (fout_out && fout_imu_pbp)
-    std::cout << "~~~~" << ROOT_DIR << " file opened" << '\n';
+    std::cout << "====== " << ROOT_DIR << " file opened" <<" ======"<< '\n';
   else
-    std::cout << "~~~~" << ROOT_DIR << " doesn't exist" << '\n';
+    std::cout << "====== " << ROOT_DIR << " doesn't exist" <<" ======"<< '\n';
 }
 
-void reset_cov(Eigen::Matrix<double, 24, 24> & P_init)
+void reset_cov(Eigen::Matrix<double, 24, 24> &P_init)
 {
   P_init = MD(24, 24)::Identity() * 0.1;
   P_init.block<3, 3>(21, 21) = MD(3, 3)::Identity() * 0.0001;
   P_init.block<6, 6>(15, 15) = MD(6, 6)::Identity() * 0.001;
 }
 
-void reset_cov_output(Eigen::Matrix<double, 30, 30> & P_init_output)
+void reset_cov_output(Eigen::Matrix<double, 30, 30> &P_init_output)
 {
   P_init_output = MD(30, 30)::Identity() * 0.01;
   P_init_output.block<3, 3>(21, 21) = MD(3, 3)::Identity() * 0.0001;
