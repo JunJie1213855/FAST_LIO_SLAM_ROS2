@@ -39,14 +39,11 @@ The frontend (Point-LIO) and the backend (laserPGO) run as **separate nodes** �
 |---|---|---|
 | `Point_LIO/` | `point_lio` | LiDAR-inertial odometry frontend |
 | `SC-PGO/` | `aloam_velodyne` | ScanContext loop closure + GTSAM pose-graph backend |
-| `../file_player_mulran/` | `file_player` | MulRan dataset player (Qt GUI) |
 
 ### Executables
 
 - `point_lio` → `pointlio_mapping` (node `laserMapping`)
-- `aloam_velodyne` → `ascanRegistration`, `alaserOdometry`, `alaserMapping` (A-LOAM frontend), `alaserPGO` (SC-PGO backend)
-
-> With Point-LIO as the frontend, only **`alaserPGO`** is used. The three A-LOAM frontend nodes (`ascanRegistration`/`alaserOdometry`/`alaserMapping`) are kept only if you want to run the original SC-A-LOAM pipeline standalone.
+- `aloam_velodyne` → `alaserPGO` (SC-PGO backend)
 
 ---
 
@@ -79,7 +76,7 @@ source install/setup.bash
 Build only the SLAM packages:
 
 ```bash
-colcon build --packages-select point_lio aloam_velodyne file_player
+colcon build --packages-select point_lio aloam_velodyne
 ```
 
 ---
@@ -110,14 +107,6 @@ ros2 launch aloam_velodyne pointlio_scpgo.launch.py \
 
 - `save_directory` must be writable and end with `/` (laserPGO saves scans/odometry here).
 - `rviz:=true` opens the SC-PGO RViz config (shows `/aft_pgo_path`, `/aft_pgo_map`, `/aft_pgo_odom`, loop-closure scans).
-
-### Terminal 3 (optional) — MulRan dataset player
-
-```bash
-ros2 run file_player file_player
-```
-
-See `file_player_mulran` for the required `sensor_data/` directory layout and the double-unpacking of `Ouster.tar.gz`.
 
 ---
 
@@ -172,7 +161,7 @@ Key parameters to check for your sensor: `common.lid_topic` / `common.imu_topic`
 - **Negative timestamps in SC-PGO**: the ROS2 port used `rclcpp::Time(seconds * 10e9)` to convert
   seconds→nanoseconds; `10e9` is `1e10`, which overflowed `int64_t` and produced negative
   timestamps (crashing RViz with `cannot store a negative time point`). Fixed to `* 1e9` across
-  `laserPosegraphOptimization.cpp`, `laserOdometry.cpp`, and `laserMapping.cpp`.
+  `laserPosegraphOptimization.cpp`.
 - `alaserPGO` clears `<save_directory>/Scans/` on startup (`rm -r` then `mkdir -p`); the
   "cannot remove" message on first run is harmless.
 

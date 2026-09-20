@@ -14,7 +14,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 # find_package(rosbag REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(image_transport REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(tf2 REQUIRED)
@@ -39,30 +38,21 @@ include_directories(
 
 # catkin_package(
 #   CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy std_msgs
-#   DEPENDS EIGEN3 PCL 
+#   DEPENDS EIGEN3 PCL
 #   INCLUDE_DIRS include
 # )
 
 ament_package()
 
-add_executable(ascanRegistration src/scanRegistration.cpp)
-ament_target_dependencies(ascanRegistration rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs tf2 tf2_ros pcl_conversions)
-target_link_libraries(ascanRegistration ${PCL_LIBRARIES})
-
-add_executable(alaserOdometry src/laserOdometry.cpp)
-ament_target_dependencies(alaserOdometry rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs tf2 tf2_ros pcl_conversions)
-target_link_libraries(alaserOdometry ${PCL_LIBRARIES} ${CERES_LIBRARIES})
-
-add_executable(alaserMapping src/laserMapping.cpp)
-ament_target_dependencies(alaserMapping rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs tf2 tf2_ros pcl_conversions)
-target_link_libraries(alaserMapping ${PCL_LIBRARIES} ${CERES_LIBRARIES})
-
-add_executable(alaserPGO 
+# SC-PGO backend only: ScanContext loop closure + GTSAM pose-graph optimization.
+# (The A-LOAM frontend — scanRegistration / laserOdometry / laserMapping — was removed;
+#  Point-LIO is the frontend instead.)
+add_executable(alaserPGO
   src/laserPosegraphOptimization.cpp
   include/scancontext/Scancontext.cpp
 )
 ament_target_dependencies(alaserPGO rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs tf2 tf2_ros tf2_geometry_msgs cv_bridge pcl_conversions)
-target_compile_options(alaserPGO 
+target_compile_options(alaserPGO
   PRIVATE ${OpenMP_CXX_FLAGS}
 )
 target_link_libraries(alaserPGO
@@ -72,9 +62,6 @@ target_link_libraries(alaserPGO
 )
 
 install(TARGETS
-  ascanRegistration
-  alaserOdometry
-  alaserMapping
   alaserPGO
   DESTINATION lib/${PROJECT_NAME}
 )
@@ -82,8 +69,3 @@ install(TARGETS
 install(DIRECTORY launch rviz_cfg
   DESTINATION share/${PROJECT_NAME}
 )
-
-# add_executable(kittiHelper src/kittiHelper.cpp)
-# ament_target_dependencies(kittiHelper rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs)
-# target_link_libraries(kittiHelper ${PCL_LIBRARIES} ${OpenCV_LIBS})
-
