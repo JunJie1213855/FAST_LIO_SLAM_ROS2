@@ -7,3 +7,4 @@ FAST-LIO/Log/*.pdf
 .vscode/settings.json
 PCD/*.pcd
 *.pyc
+*.pcd

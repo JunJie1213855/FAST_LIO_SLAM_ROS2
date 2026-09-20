@@ -827,7 +827,7 @@ void process()
 
         sensor_msgs::msg::PointCloud2 laserCloudSurround3;
 				pcl::toROSMsg(*laserCloudSurround, laserCloudSurround3);
-				laserCloudSurround3.header.stamp = rclcpp::Time(timeLaserOdometry * 10e9);
+				laserCloudSurround3.header.stamp = rclcpp::Time(timeLaserOdometry * 1e9);
 				laserCloudSurround3.header.frame_id = "camera_init";
 				pubLaserCloudSurround->publish(laserCloudSurround3);
 			}
@@ -842,14 +842,14 @@ void process()
 				}
         sensor_msgs::msg::PointCloud2 laserCloudMsg;
 				pcl::toROSMsg(laserCloudMap, laserCloudMsg);
-				laserCloudMsg.header.stamp = rclcpp::Time(timeLaserOdometry * 10e9);
+				laserCloudMsg.header.stamp = rclcpp::Time(timeLaserOdometry * 1e9);
 				laserCloudMsg.header.frame_id = "camera_init";
 				pubLaserCloudMap->publish(laserCloudMsg);
 			}
 
       sensor_msgs::msg::PointCloud2 laserCloudFullRes3Local;
 			pcl::toROSMsg(*laserCloudFullRes, laserCloudFullRes3Local);
-			laserCloudFullRes3Local.header.stamp = rclcpp::Time(timeLaserOdometry * 10e9);
+			laserCloudFullRes3Local.header.stamp = rclcpp::Time(timeLaserOdometry * 1e9);
 			laserCloudFullRes3Local.header.frame_id = "camera_init";
 			pubLaserCloudFullResLocal->publish(laserCloudFullRes3Local);
 
@@ -861,7 +861,7 @@ void process()
 
       sensor_msgs::msg::PointCloud2 laserCloudFullRes3;
 			pcl::toROSMsg(*laserCloudFullRes, laserCloudFullRes3);
-			laserCloudFullRes3.header.stamp = rclcpp::Time(timeLaserOdometry * 10e9);
+			laserCloudFullRes3.header.stamp = rclcpp::Time(timeLaserOdometry * 1e9);
 			laserCloudFullRes3.header.frame_id = "camera_init";
 			pubLaserCloudFullRes->publish(laserCloudFullRes3);
 
@@ -872,7 +872,7 @@ void process()
       nav_msgs::msg::Odometry odomAftMapped;
 			odomAftMapped.header.frame_id = "camera_init";
 			odomAftMapped.child_frame_id = "/aft_mapped";
-			odomAftMapped.header.stamp = rclcpp::Time(timeLaserOdometry * 10e9);
+			odomAftMapped.header.stamp = rclcpp::Time(timeLaserOdometry * 1e9);
 			odomAftMapped.pose.pose.orientation.x = q_w_curr.x();
 			odomAftMapped.pose.pose.orientation.y = q_w_curr.y();
 			odomAftMapped.pose.pose.orientation.z = q_w_curr.z();

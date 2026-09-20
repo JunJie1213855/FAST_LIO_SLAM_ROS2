@@ -323,7 +323,7 @@ void pubPath(void)
         nav_msgs::msg::Odometry odomAftPGOthis;
         odomAftPGOthis.header.frame_id = "camera_init";
         odomAftPGOthis.child_frame_id = "/aft_pgo";
-        odomAftPGOthis.header.stamp = rclcpp::Time(keyframeTimes.at(node_idx) * 10e9);
+        odomAftPGOthis.header.stamp = rclcpp::Time(keyframeTimes.at(node_idx) * 1e9);
         odomAftPGOthis.pose.pose.position.x = pose_est.x;
         odomAftPGOthis.pose.pose.position.y = pose_est.y;
         odomAftPGOthis.pose.pose.position.z = pose_est.z;

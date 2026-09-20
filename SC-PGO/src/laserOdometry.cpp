@@ -519,7 +519,7 @@ int main(int argc, char **argv)
             nav_msgs::msg::Odometry laserOdometry;
             laserOdometry.header.frame_id = "camera_init";
             laserOdometry.child_frame_id = "/laser_odom";
-            laserOdometry.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 10e9);
+            laserOdometry.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 1e9);
             laserOdometry.pose.pose.orientation.x = q_w_curr.x();
             laserOdometry.pose.pose.orientation.y = q_w_curr.y();
             laserOdometry.pose.pose.orientation.z = q_w_curr.z();
@@ -581,19 +581,19 @@ int main(int argc, char **argv)
 
                 sensor_msgs::msg::PointCloud2 laserCloudCornerLast2;
                 pcl::toROSMsg(*laserCloudCornerLast, laserCloudCornerLast2);
-                laserCloudCornerLast2.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 10e9);
+                laserCloudCornerLast2.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 1e9);
                 laserCloudCornerLast2.header.frame_id = "/camera";
                 pubLaserCloudCornerLast->publish(laserCloudCornerLast2);
 
                 sensor_msgs::msg::PointCloud2 laserCloudSurfLast2;
                 pcl::toROSMsg(*laserCloudSurfLast, laserCloudSurfLast2);
-                laserCloudSurfLast2.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 10e9);
+                laserCloudSurfLast2.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 1e9);
                 laserCloudSurfLast2.header.frame_id = "/camera";
                 pubLaserCloudSurfLast->publish(laserCloudSurfLast2);
 
                 sensor_msgs::msg::PointCloud2 laserCloudFullRes3;
                 pcl::toROSMsg(*laserCloudFullRes, laserCloudFullRes3);
-                laserCloudFullRes3.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 10e9);
+                laserCloudFullRes3.header.stamp = rclcpp::Time(timeSurfPointsLessFlat * 1e9);
                 laserCloudFullRes3.header.frame_id = "/camera";
                 pubLaserCloudFullRes->publish(laserCloudFullRes3);
             }
