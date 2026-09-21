@@ -1,0 +1,65 @@
+/**:
+  ros__parameters:
+    # ---- output ----
+    save_directory: ""                     # 由 launch 参数覆盖，必须以 '/' 结尾
+
+    # ---- keyframe ----
+    keyframe_meter_gap: 1.0                # 平移累计超过该值（米）视为关键帧
+    keyframe_deg_gap: 10.0                 # 旋转累计超过该值（度）视为关键帧
+
+    # ---- scan context ----
+    sc_dist_thres: 0.2
+    sc_max_radius: 80.0                    # 户外 80，室内 20~40
+    scancontext_filter_size: 0.4           # 降采样体素尺寸
+
+    # ---- gps ----
+    use_gps: true
+    gps_time_tolerance: 0.1                # 该时间窗（秒）内到达的 GPS 视为当前帧的观测
+
+    # ---- noise models ----
+    prior_noise_xyz: 1e-12
+    prior_noise_rpy: 1e-12
+    odom_noise_xyz: 1e-6
+    odom_noise_rpy: 1e-4
+    loop_noise_score: 0.5
+    gps_noise_xy: 1.0e9
+    gps_noise_altitude: 250.0
+
+    # ---- isam2 ----
+    isam_relinearize_threshold: 0.01
+    isam_relinearize_skip: 1
+
+    # ---- icp ----
+    icp_filter_size: 0.4
+    icp_max_correspondence_distance: 150.0
+    icp_max_iterations: 100
+    icp_transformation_epsilon: 1e-6
+    icp_euclidean_fitness_epsilon: 1e-6
+    icp_ransac_iterations: 0
+    icp_fitness_score_threshold: 0.3
+    history_keyframe_search_num: 25
+
+    # ---- frequencies (Hz) ----
+    loop_closure_frequency: 1.0
+    isam_frequency: 1.0
+    viz_path_frequency: 10.0
+    viz_map_frequency: 0.1                  # 0.1 表示每 10s 一次
+    viz_map_skip_frames: 2
+
+    # ---- threads ----
+    num_cores_transform: 16                 # local2global 的 omp 核数
+    num_cores_icp: 8                        # transformPointCloud 的 omp 核数
+
+    # ---- map viz ----
+    mapviz_filter_size: 0.4
+
+    # ---- topics ----
+    sub_lidar_topic: "/cloud_registered_body"   # Point-LIO 体坐标系点云
+    sub_odom_topic: "/aft_mapped_to_init"
+    sub_gps_topic: "/gps/fix"
+    pub_odom_topic: "/aft_pgo_odom"
+    pub_repub_odom_topic: "/repub_odom"
+    pub_path_topic: "/aft_pgo_path"
+    pub_map_topic: "/aft_pgo_map"
+    pub_loop_scan_topic: "/loop_scan_local"
+    pub_loop_submap_topic: "/loop_submap_local"

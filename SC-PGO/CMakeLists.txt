@@ -49,6 +49,7 @@ ament_package()
 #  Point-LIO is the frontend instead.)
 add_executable(alaserPGO
   src/laserPosegraphOptimization.cpp
+  src/sc_pgo_node.cpp
   include/scancontext/Scancontext.cpp
 )
 ament_target_dependencies(alaserPGO rclcpp rclpy std_msgs geometry_msgs nav_msgs sensor_msgs tf2 tf2_ros tf2_geometry_msgs cv_bridge pcl_conversions)
@@ -66,6 +67,6 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch rviz_cfg
+install(DIRECTORY launch rviz_cfg config
   DESTINATION share/${PROJECT_NAME}
 )

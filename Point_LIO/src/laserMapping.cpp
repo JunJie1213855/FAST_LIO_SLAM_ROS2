@@ -426,13 +426,13 @@ int main(int argc, char **argv)
   }
   else
   {
-    sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
-      lid_topic, rclcpp::SensorDataQoS(),
-      [](const sensor_msgs::msg::PointCloud2::SharedPtr msg) { standard_pcl_cbk(msg); });
     // sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
-    //     lid_topic, rclcpp::QoS(1000).reliable(),
-    //     [](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
-    //     { standard_pcl_cbk(msg); });
+    //   lid_topic, rclcpp::SensorDataQoS(),
+    //   [](const sensor_msgs::msg::PointCloud2::SharedPtr msg) { standard_pcl_cbk(msg); });
+    sub_pcl_pc = nh->create_subscription<sensor_msgs::msg::PointCloud2>(
+        lid_topic, rclcpp::QoS(1000).reliable(),
+        [](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+        { standard_pcl_cbk(msg); });
   }
   auto sub_imu =
       nh->create_subscription<sensor_msgs::msg::Imu>(imu_topic, rclcpp::SensorDataQoS(), imu_cbk);
