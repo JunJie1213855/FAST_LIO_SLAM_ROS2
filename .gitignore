@@ -8,5 +8,7 @@ FAST-LIO/Log/*.pdf
 PCD/*.pcd
 *.pyc
 *.pcd
+install
+
 
 __pycache__

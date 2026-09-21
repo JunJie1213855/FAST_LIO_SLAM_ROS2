@@ -360,6 +360,7 @@ void SCPGONode::initNoises()
 void SCPGONode::laserOdometryHandler(const nav_msgs::msg::Odometry::ConstSharedPtr _laserOdometry)
 {
     mtx_buf_.lock();
+    // RCLCPP_INFO(rclcpp::get_logger("scpgo"),"laserOdometryHandler CALLBACK");
     odometry_buf_.push(_laserOdometry);
     mtx_buf_.unlock();
 } // laserOdometryHandler
@@ -367,6 +368,8 @@ void SCPGONode::laserOdometryHandler(const nav_msgs::msg::Odometry::ConstSharedP
 void SCPGONode::laserCloudFullResHandler(const sensor_msgs::msg::PointCloud2::ConstSharedPtr _laserCloudFullRes)
 {
     mtx_buf_.lock();
+    // std::cout << "laserCloudFullResHandler CALLBACK" <<"\n";
+    // RCLCPP_INFO(rclcpp::get_logger("scpgo"),"laserCloudFullResHandler CALLBACK");
     full_res_buf_.push(_laserCloudFullRes);
     mtx_buf_.unlock();
 } // laserCloudFullResHandler

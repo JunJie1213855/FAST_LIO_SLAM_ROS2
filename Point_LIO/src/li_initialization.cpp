@@ -81,9 +81,9 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
     PointCloudXYZI::Ptr ptr(new PointCloudXYZI(20000, 1));
     p_pre->process(msg, ptr);
     static int cbk_cnt = 0;
-    if (++cbk_cnt % 10 == 1)
-      printf("[cbk] scan=%d lidar_type=%d ptr->size=%zu buffer=%zu\n",
-             scan_count, lidar_type, ptr->size(), lidar_buffer.size());
+    // if (++cbk_cnt % 10 == 1)
+    //   printf("[cbk] scan=%d lidar_type=%d ptr->size=%zu buffer=%zu\n",
+    //          scan_count, lidar_type, ptr->size(), lidar_buffer.size());
     if (con_frame)
     {
       if (frame_ct == 0)

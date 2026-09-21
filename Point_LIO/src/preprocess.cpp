@@ -96,8 +96,8 @@ void Preprocess::process(
     break;
   }
   static int proc_cnt = 0;
-  if (++proc_cnt % 10 == 1)
-    printf("[proc2] surf=%zu\n", pl_surf.size());
+  // if (++proc_cnt % 10 == 1)
+  //   printf("[proc2] surf=%zu\n", pl_surf.size());
   *pcl_out = pl_surf;
 }
 
@@ -770,9 +770,9 @@ void Preprocess::robosense_handler(const sensor_msgs::msg::PointCloud2::SharedPt
   int plsize = 0;
   double msg_time = rclcpp::Time(msg->header.stamp).seconds();
 
-  printf("[robo] w=%d h=%d fields=%zu ring=%d ts=%d i_sub=%d/%d\n",
-         msg->width, msg->height, msg->fields.size(),
-         has_ring, has_timestamp, i_sub_cloud, num_sub_cloud);
+  // printf("[robo] w=%d h=%d fields=%zu ring=%d ts=%d i_sub=%d/%d\n",
+  //        msg->width, msg->height, msg->fields.size(),
+  //        has_ring, has_timestamp, i_sub_cloud, num_sub_cloud);
 
   // 如果点云没有 ring 和 timestamp 字段，使用标准 PointXYZI 处理
   if (!has_ring || !has_timestamp)
@@ -876,7 +876,7 @@ void Preprocess::robosense_handler(const sensor_msgs::msg::PointCloud2::SharedPt
     }
   }
   std::sort(time_stamp_of_points.begin(), time_stamp_of_points.end());
-  printf("[robo] surf=%zu plsize=%d\n", pl_surf.size(), plsize);
+  // printf("[robo] surf=%zu plsize=%d\n", pl_surf.size(), plsize);
 }
 void Preprocess::give_feature(pcl::PointCloud<PointType> &pl, vector<orgtype> &types)
 {

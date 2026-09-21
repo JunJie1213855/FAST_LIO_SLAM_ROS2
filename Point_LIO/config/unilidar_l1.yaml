@@ -54,7 +54,6 @@
             path_en: true                 # false: close the path output
             scan_publish_en: true         # false: close all the point cloud output
             scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame (required by SC-PGO / laserPGO)
-
         pcd_save:
             pcd_save_en: true       # save map to pcd file
             interval: -1            # how many LiDAR frames saved in each pcd file; 
