@@ -173,6 +173,20 @@ Key parameters to check for your sensor: `common.lid_topic` / `common.imu_topic`
 
 ---
 
+## TODO
+
+- [ ] **Stable Triangle Descriptor (STD)** — add STD as a loop-closure / place-recognition
+      descriptor in the SC-PGO backend, as an alternative to ScanContext. STD builds a global
+      descriptor from stable triangles of keypoints, improving robustness to viewpoint change.
+- [ ] **Binary and Triangle Combined Descriptor (BTC)** — add BTC, which fuses a binary
+      descriptor with a triangle descriptor for faster, more discriminative loop detection,
+      again as an alternative to ScanContext in the SC-PGO loop module.
+
+> Both descriptors target the loop-detection stage of `laserPGO` (`SC-PGO/`), where they would
+> be selectable alongside the existing ScanContext + PCL ICP verification pipeline.
+
+---
+
 ## Acknowledgements
 
 - [Point-LIO](https://github.com/hku-mars/Point-LIO) authors (HKU MARS Lab)
