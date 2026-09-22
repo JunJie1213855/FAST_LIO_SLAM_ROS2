@@ -8,7 +8,7 @@
     keyframe_deg_gap: 10.0                 # 旋转累计超过该值（度）视为关键帧
 
     # ---- scan context ----
-    sc_dist_thres: 0.5
+    sc_dist_thres: 0.3
     sc_max_radius: 80.0                    # 户外 80，室内 20~40
     scancontext_filter_size: 0.4           # 降采样体素尺寸
 
@@ -55,7 +55,7 @@
 
     # ---- topics ----
     sub_lidar_topic: "/cloud_registered_body"   # Point-LIO 体坐标系点云
-    sub_odom_topic: "/aft_mapped_to_init"
+    sub_odom_topic: "/aft_mapped_to_init_pgo"
     sub_gps_topic: "/gps/fix"
     pub_odom_topic: "/aft_pgo_odom"
     pub_repub_odom_topic: "/repub_odom"

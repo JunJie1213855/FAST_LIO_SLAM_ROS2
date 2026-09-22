@@ -35,7 +35,7 @@ def generate_launch_description():
 
     declare_point_lio_cfg_dir = DeclareLaunchArgument(
         "point_lio_cfg_dir",
-        default_value=PathJoinSubstitution([point_lio_dir, "config", "kaist.yaml"]),
+        default_value=PathJoinSubstitution([point_lio_dir, "config", "velody16.yaml"]),
         description="Path to the Point-LIO config file",
     )
 
